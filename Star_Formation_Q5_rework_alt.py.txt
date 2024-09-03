@@ -1,0 +1,117 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Oct 27 20:31:46 2020
+
+@author: franc
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+from astropy import units as u
+#from astropy.units import cds
+#from astropy.units import astrophys
+#Most of astropy is discarded to allow for computing power
+
+#Initial mass of protostars
+#n=50 #Code test
+#n=1000 #Graph test
+n=10000 #Final value
+Pop = np.random.uniform(0,0.01,n) #Generates 'protostars' of random masses
+
+plt.figure()
+plt.hist(Pop,bins=50,range=[0,0.01])
+
+plt.xlabel('Mass')
+plt.ylabel('Population')
+plt.title('Population of stars with inital random masses to 10^-2')
+plt.show()
+
+#Since Salpeter's IMF only applies at masses = 0.5 M_sun, it fails here and 
+#so the 1/M function is discarded in this graph.
+plt.figure()
+plt.hist(np.log10(Pop),log=True)
+#plt.plot(np.log10(L),Inv_pop)
+plt.xlabel('Mass')
+plt.ylabel('Population')
+plt.title('Population of stars with inital random masses to 10^-2')
+plt.show()
+
+#%%
+"""
+Question 5B
+"""
+#Using whole array method and list comprehension
+
+#Initial parameters - returned values should be dimensionless
+t_final = 3 #in Myrs
+dt = 0.1 #in Myrs
+p = ((1.6 * 10**-20 * u.gram)/(u.centimeter**3))/((10**-24 * u.gram)/ u.centimeter**3)
+vs = ((100 * u.meter)/u.second)/((10000*u.meter)/u.second)
+M_max = 150 #Maximum star mass in solar mass
+#Const = (1*astrophys.solMass)/u.Myr
+#SI = Const.cgs
+SI = 6.3008907*10**19 #Number float only from the previous SI
+timestep = int(t_final/dt)
+A=[]
+it=4 #No. of Iteration = 4 is considered to be the optimum unity value 
+#Any higher, then the simulation becomes unnecessarily long and labour-intensive
+
+for i in range(it): 
+    P = Pop #restarts P back to the original inital mass 
+    M=0
+    for j in range(timestep): 
+        M = ((1.4e11*P**2*p*vs**-3)/SI) * dt 
+        P=P+M   
+        #Uses whole array method by including the population array itself into the
+    A=[s if s<=150 else M_max for s in P] 
+    #List comprehension to replace the extremely high-mass star with 150M 
+      
+    string=('Mass-population of stars of time interval',dt,'Myrs')
+    Max = np.log10(np.amax(A))
+    Min = np.log10(np.min(A))
+    L = np.logspace(Min,Max,n) #Generates the reciprocal mass / IMF function
+    plt.figure()
+    plt.hist(np.log10(A),log=True)
+    plt.plot(np.log10(L),1/L)
+    plt.xlabel('Mass in log10')
+    plt.ylabel('Star population')
+    plt.title(string)
+    plt.show() 
+    A.clear()
+    if i < it-1:
+        dt = dt/10
+        print(dt)
+        timestep=int(t_final/dt) 
+        print("Iteration",it,"complete. Starting new iteration with dt =",dt,"Myrs ...")
+    else:
+        print("Timestep section complete. Beginning density calculations with dt =",dt)
+#Print elements somewhat unnecessary, but it is used to keep track of iterations and dt values
+
+#%%
+
+#New parameters
+up_p = 3*p
+down_p = p/3
+dense = [up_p,down_p]
+
+for d in dense:
+    #    m=0.002 * astrophys.solMass
+    P = Pop
+    M=0
+    for j in range(timestep): 
+        M = ((1.4e11*P**2*d*vs**-3)/SI) * dt
+        P=P+M   
+    A=[s if s<=150 else M_max for s in P]
+    Max = np.log10(np.amax(A))
+    Min = np.log10(np.min(A))
+    L = np.logspace(Min,Max,n) #Generates the reciprocal mass function
+    string=('Mass-population of stars at gas density',int(d),"x 10^(-20) g/cm^3")
+    
+    plt.figure()
+    plt.hist(np.log10(A),log=True)
+    plt.plot(np.log10(L),1/L)
+    plt.xlabel('Mass in log10')
+    plt.ylabel('Star population')
+    plt.title(string)
+    plt.show() 
+    A.clear()
