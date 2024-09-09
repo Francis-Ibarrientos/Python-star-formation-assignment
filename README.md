@@ -12,3 +12,9 @@ For the sake of simplicity and brevity on a highly technical and scientific repo
 + Additional contraints and discussions on the model against reality, namely the ommission of radiation from larger stars disrupting star formation
 + Reducing the time interval when star mass is added by 3 order of magnitude greatly increases accuracy of the model towards what is known as "unity value". Any further reductions however would be too computationally expensive for diminishing accuracy.
 + Adjusting the gas density of the cloud by 3 times more or less than the original value showed its impact on star formation. In particular, reducing density to 1/3 its original value had led to very few stars exceeding the minimal mass for protostars to ignite into true stars. 
+
+The final two pages contain visuals produced through Python, particularly the MatPlotLib module.
++ Figure 1: A log-scale line visual diagram on the mass-gain of stars against the final mass of the star itself.
++ Figure 2: Two visuals from the same uniform random array, in linear and log scale respectively
++ Figure 3: Four visuals outlining the popuation of protostars after 3 millions years of mass gain. Starting from figure 3a to 3d, the time interval was reduced until it rached unity value
++ Figure 4: Two visuals where the parameter on gas density was reduced by a factor of three
